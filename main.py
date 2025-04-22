@@ -32,15 +32,23 @@ class SystemMonitorApp:
             "value": lambda : psutil.disk_usage('/').percent
         }
     }
-        def make_label(text=None):
+        def make_label(row, col, text=None):
             font = ("Helvetica", 14)
             label = tk.Label(self.root, text=text, font=font)
-            label.pack(side=tk.LEFT, padx=10)
+            label.grid(row=row, column=col, padx=10, pady=10, sticky="nsew")
             return label
         
+        def traverse_grid(row = 0, col = 0, max_col = 4):
+            col += 1
+            if col > max_col:
+                col = 0
+                row += 1
+            return row, col
         
+        row, col = 0, 0
         for metric, config in metrics.items():
-            metrics[metric]["element"] = make_label(config["label"])
+            metrics[metric]["element"] = make_label(row, col, config["label"])
+            row, col = traverse_grid(row, col)
 
         print(f"creating metrics: {metric}")
         return metrics
